@@ -29,7 +29,7 @@ class UpdateProjectRequest extends FormRequest
             'location' => 'required|string|max:255',
             'description' => 'required|string',
             'owner_id' => [
-                'required',
+                'nullable',
                 'exists:users,id',
                 Rule::exists('users', 'id')->where(function ($query) {
                     $query->whereHas('role', function ($q) {

@@ -1,45 +1,70 @@
 <x-guest-layout>
-    <!--  <div class="min-h-screen flex items-center justify-center bg-gray-50"> -->
-        <div class="w-full max-w-md p-8 bg-white rounded shadow-lg text-center">
-            <div class="flex justify-center mb-4">
-                <div class="bg-purple-600 text-white rounded-full p-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.209.804 5.879 2.138M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                </div>
+    <div class="w-full min-h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Animated background elements -->
+        <div class="absolute inset-0 bg-gradient-to-br from-orange-400 via-white to-blue-700"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,165,0,0.2),rgba(255,255,255,0))]"></div>
+        
+        <!-- Floating shapes -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-300/20 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+            <div class="absolute top-1/3 right-1/4 w-64 h-64 bg-white/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-1/4 left-1/3 w-64 h-64 bg-blue-300/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
+
+        <div class="w-full max-w-md p-8 bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl text-center border border-orange-200/40 relative z-10">
+            <div class="flex justify-center mb-8 animate-fade-in-down">
+                <img src="/logoHassaka.jpg" alt="Hasaka Logo" class="h-20 w-auto drop-shadow-xl transition-transform duration-500 hover:scale-105 rounded-full border-4 border-white/80">
             </div>
-            <h2 class="text-lg font-semibold text-purple-700 mb-4">Have an account?</h2>
-
-            <form method="POST" action="{{ route('login') }}">
+            <h2 class="text-3xl font-extrabold text-orange-800 mb-8 tracking-wide drop-shadow-sm">Welcome Back!</h2>
+            <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
-
-                <div class="mb-4">
+                <div>
                     <input id="email" name="email" type="email" placeholder="Username"
-                           class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
-                           value="{{ old('email') }}" required autofocus>
+                        class="w-full px-5 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/80 shadow-sm text-lg transition placeholder-gray-400"
+                        value="{{ old('email') }}" required autofocus>
                 </div>
-
-                <div class="mb-4">
+                <div>
                     <input id="password" name="password" type="password" placeholder="Password"
-                           class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
-                           required>
+                        class="w-full px-5 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/80 shadow-sm text-lg transition placeholder-gray-400"
+                        required>
                 </div>
-
-                <div class="flex items-center justify-between text-sm text-purple-600 mb-4">
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" name="remember"
-                               class="form-checkbox text-purple-600 focus:ring-purple-500">
+                <div class="flex items-center justify-between text-sm text-orange-700 mb-2">
+                    <label class="inline-flex items-center select-none">
+                        <input type="checkbox" name="remember" class="form-checkbox text-orange-600 focus:ring-orange-400">
                         <span class="ml-2">Remember Me</span>
                     </label>
-                    <a href="{{ route('password.request') }}" class="hover:underline">Forgot Password</a>
+                    <a href="{{ route('password.request') }}" class="hover:underline text-orange-500">Forgot Password?</a>
                 </div>
-
                 <button type="submit"
-                        class="w-full bg-purple-700 text-white py-2 rounded hover:bg-purple-800 transition">
+                    class="w-full bg-gradient-to-r from-orange-500 to-blue-600 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:from-orange-600 hover:to-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-400">
                     Get Started
                 </button>
             </form>
         </div>
     </div>
+    <style>
+        @keyframes fade-in-down {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-down {
+            animation: fade-in-down 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
 </x-guest-layout>

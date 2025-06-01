@@ -16,9 +16,9 @@ class InsightController extends Controller
 
     public function index(Request $request)
     {
-        $insights = Insight::filter($request->all())
-            ->orderBy('date', 'desc')
-            ->paginate(20);
+        $insights = Insight::filter(request(['title', 'type', 'is_published']))
+            ->paginate(10)
+            ->withQueryString();
 
         return view('insights.index', [
             'insights' => $insights,

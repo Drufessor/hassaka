@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\InsightsExport;
-use App\Http\Requests\ExportRequest;
-use App\Models\Insight;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExportController extends Controller
@@ -14,9 +13,9 @@ class ExportController extends Controller
         return view('insights.export');
     }
 
-    public function export(ExportRequest $request)
+    public function export(Request $request)
     {
-        $filters = $request->validated();
+        $filters = $request->only(['platform', 'start_date', 'end_date']);
 
         return Excel::download(
             new InsightsExport($filters),

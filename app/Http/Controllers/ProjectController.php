@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\AuditLog;
+use App\Models\User;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 
@@ -20,7 +22,10 @@ class ProjectController extends Controller
     {
         $projects = auth()->user()->isAdmin()
             ? Project::with(['owner', 'marketing'])->latest()->paginate(10)
-            : Project::editableBy(auth()->user())->latest()->paginate(10);
+            : Project::viewableBy(auth()->user())
+                ->with(['owner', 'marketing'])
+                ->latest()
+                ->paginate(10);
 
         return view('project.index', compact('projects'));
     }
@@ -30,7 +35,11 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('project.create');
+        $marketings = User::whereHas('role', function($query) {
+            $query->where('name', 'marketing');
+        })->get();
+
+        return view('project.create', compact('marketings'));
     }
 
     /**
@@ -38,11 +47,11 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $project = Project::create([
-            ...$request->validated(),
-            'owner_id' => auth()->id(),
-            'created_by' => auth()->id()
-        ]);
+        $data = $request->validated();
+        $data['owner_id'] = auth()->id();
+        $data['created_by'] = auth()->id();
+
+        $project = Project::create($data);
 
         return redirect()->route('project.index')
             ->with('success', 'Project created successfully.');
@@ -61,7 +70,11 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('project.edit', compact('project'));
+        $marketings = User::whereHas('role', function($query) {
+            $query->where('name', 'marketing');
+        })->get();
+
+        return view('project.edit', compact('project', 'marketings'));
     }
 
     /**

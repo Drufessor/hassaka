@@ -105,6 +105,48 @@ class User extends Authenticatable
     }
 
     /**
+     * Cek apakah user adalah teknisi
+     */
+    public function isTeknisi(): bool
+    {
+        return $this->role->name === 'teknisi';
+    }
+
+    /**
+     * Cek apakah user adalah finance
+     */
+    public function isFinance(): bool
+    {
+        return $this->role->name === 'finance';
+    }
+
+    /**
+     * Check if user has a specific role or any of the given roles
+     * 
+     * @param string|array $roles Role name or array of role names
+     * @return bool
+     */
+    public function hasRole(string|array $roles): bool
+    {
+        if (is_string($roles)) {
+            return $this->role->name === $roles;
+        }
+
+        return in_array($this->role->name, $roles);
+    }
+
+    /**
+     * Check if user has any of the given roles
+     * 
+     * @param array $roles Array of role names
+     * @return bool
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return $this->hasRole($roles);
+    }
+
+    /**
      * Scope untuk mendapatkan hanya admin
      */
     public function scopeAdmins($query)
@@ -131,6 +173,26 @@ class User extends Authenticatable
     {
         return $query->whereHas('role', function($q) {
             $q->where('name', 'marketing');
+        });
+    }
+
+    /**
+     * Scope untuk mendapatkan hanya teknisi
+     */
+    public function scopeTeknisi($query)
+    {
+        return $query->whereHas('role', function($q) {
+            $q->where('name', 'teknisi');
+        });
+    }
+
+    /**
+     * Scope untuk mendapatkan hanya finance
+     */
+    public function scopeFinance($query)
+    {
+        return $query->whereHas('role', function($q) {
+            $q->where('name', 'finance');
         });
     }
 }

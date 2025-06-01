@@ -27,6 +27,8 @@ class UserSeeder extends Seeder
         $adminRoleId = DB::table('roles')->where('name', 'admin')->first()->id;
         $ownerRoleId = DB::table('roles')->where('name', 'owner')->first()->id;
         $marketingRoleId = DB::table('roles')->where('name', 'marketing')->first()->id;
+        $teknisiRoleId = DB::table('roles')->where('name', 'teknisi')->first()->id;
+        $financeRoleId = DB::table('roles')->where('name', 'finance')->first()->id;
 
         // Create admin user
         User::create([
@@ -39,7 +41,7 @@ class UserSeeder extends Seeder
 
         // Create owner user
         User::create([
-            'name' => 'Business Owner',
+            'name' => 'Owner',
             'email' => 'owner@example.com',
             'password' => Hash::make('password123'),
             'role_id' => $ownerRoleId,
@@ -48,19 +50,28 @@ class UserSeeder extends Seeder
 
         // Create marketing user
         User::create([
-            'name' => 'Marketing Staff',
+            'name' => 'Marketing',
             'email' => 'marketing@example.com',
             'password' => Hash::make('password123'),
             'role_id' => $marketingRoleId,
             'email_verified_at' => now(),
         ]);
 
-        // Optional: Create additional marketing users
+        // Create technician users
         User::create([
-            'name' => 'Marketing Team Lead',
-            'email' => 'marketing2@example.com',
+            'name' => 'Teknisi',
+            'email' => 'teknisi@example.com',
             'password' => Hash::make('password123'),
-            'role_id' => $marketingRoleId,
+            'role_id' => $teknisiRoleId,
+            'email_verified_at' => now(),
+        ]);
+
+        // Create finance users
+        User::create([
+            'name' => 'Finance',
+            'email' => 'finance@example.com',
+            'password' => Hash::make('password123'),
+            'role_id' => $financeRoleId,
             'email_verified_at' => now(),
         ]);
     }

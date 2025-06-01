@@ -2,20 +2,28 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
+    use SoftDeletes, Auditable;
+
     protected $fillable = [
         'date',
         'project_name',
         'location',
         'description',
-        'owner_id',
         'marketing_id',
+        'owner_id',
         'created_by'
+    ];
+
+    protected $casts = [
+        'date' => 'date'
     ];
 
     // Relasi ke owner
@@ -61,5 +69,23 @@ class Project extends Model
             fn($q) => $q->where('id', 0) // Tidak ada akses
         );
         // Admin bisa lihat semua (tidak perlu filter)
+    }
+
+    // Query scope untuk project yang bisa dilihat
+    public function scopeViewableBy(Builder $query, User $user): void
+    {
+        // Admin, owner, dan marketing bisa lihat semua project
+        if ($user->isAdmin() || $user->isOwner() || $user->isMarketing()) {
+            return;
+        }
+        
+        // Untuk user lain, hanya bisa lihat project yang terkait dengan mereka
+        $query->when(
+            $user->isOwner(),
+            fn($q) => $q->where('owner_id', $user->id)
+        )->when(
+            $user->isMarketing(),
+            fn($q) => $q->where('marketing_id', $user->id)
+        );
     }
 }
